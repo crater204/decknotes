@@ -1,43 +1,55 @@
 package com.example.cross.decknotes.DataBase.Entities;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
-
-import java.util.Date;
 
 @Entity(tableName = "record_table")
 public class RecordEntity
 {
-    private int id;
+    @PrimaryKey(autoGenerate = true)
+    private int recordId;
+
+    private int deckId;
+
+    public int getRecordId()
+    {
+        return recordId;
+    }
+
+    public void setRecordId(int recordId)
+    {
+        this.recordId = recordId;
+    }
 
     @NonNull
-    private Date date;
+    private String date;
 
     private boolean isWin;
 
-    public RecordEntity(int id, @NonNull Date date, boolean isWin) {
-        this.id = id;
+    public RecordEntity(int deckId, @NonNull String date, boolean isWin) {
+        this.deckId = deckId;
         this.date = date;
         this.isWin = isWin;
     }
 
-    public int getId()
+    public int getDeckId()
     {
-        return id;
+        return deckId;
     }
 
-    public void setId(int id)
+    public void setDeckId(int deckId)
     {
-        this.id = id;
+        this.deckId = deckId;
     }
 
     @NonNull
-    public Date getDate()
+    public String getDate()
     {
         return date;
     }
 
-    public void setDate(@NonNull Date date)
+    public void setDate(@NonNull String date)
     {
         this.date = date;
     }

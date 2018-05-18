@@ -14,6 +14,6 @@ public interface RecordDao
     @Insert
     void insert(RecordEntity record);
 
-    @Query("SELECT * from record_table WHERE id = :id")
-    List<RecordEntity> getRecordsForId(int id);
+    @Query("SELECT * from record_table WHERE deckId = :deckId")
+    List<RecordEntity> getRecordsForDeck(int deckId);
 }

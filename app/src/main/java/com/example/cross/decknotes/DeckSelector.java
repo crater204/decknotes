@@ -1,23 +1,13 @@
 package com.example.cross.decknotes;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.cross.decknotes.Data.Deck;
-import com.example.cross.decknotes.Data.DeckData;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.example.cross.decknotes.Data.DeckData.decks;
 
 public class DeckSelector extends AppCompatActivity
 {
@@ -27,31 +17,32 @@ public class DeckSelector extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deck_selector);
 
-        ArrayList<Deck> list = new ArrayList<>();
-        for (int i = 0; i < DeckData.decks.length; i++) {
-            list.add(DeckData.decks[i]);
-        }
-        CustomArrayAdapter adapter = new CustomArrayAdapter(this, R.layout.deck_selector_line, list);
-
-        ListView listView = findViewById(R.id.decks_list_view);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        FloatingActionButton fab = findViewById(R.id.fab);
+        RecyclerView recyclerView = findViewById(R.id.deck_selector_recycler_view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        DeckListAdapter adapter = new DeckListAdapter(this, new CustomClickListener());
+        recyclerView.setAdapter(adapter);
+        fab.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int index, long l)
+            public void onClick(View view)
             {
-                Intent intent = new Intent(getApplicationContext(), DeckDetails.class);
-                intent.putExtra("DeckIndex", index);
-                startActivity(intent);
+                // TODO: Create a dialog and that adds a new deck to the database
             }
         });
     }
 
-    private class CustomArrayAdapter extends ArrayAdapter<Deck>
-    {
-        public CustomArrayAdapter(@NonNull Context context, int resourceId, List<Deck> objects)
+    private class CustomClickListener implements DeckListAdapter.RecyclerViewClickListener {
+        @Override
+        public void onClick(View view, int position)
         {
-            super(context, resourceId, objects);
+            Toast.makeText(getApplicationContext(), "CLICK!!! " + position, Toast.LENGTH_SHORT).show();
+            /*
+            Intent intent = new Intent(getApplicationContext(), DeckDetails.class);
+            intent.putExtra("DeckIndex", position);
+            startActivity(intent);
+            */
         }
     }
 }
