@@ -2,6 +2,7 @@ package com.example.cross.decknotes;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,10 +23,13 @@ public class DeckDetails extends AppCompatActivity
 
             TextView nameTV = findViewById(R.id.detail_name);
             TextView winPercentageTV = findViewById(R.id.detail_win_percentage);
+            ProgressBar progressBar = findViewById(R.id.detail_progress_bar);
             Deck deck = DeckData.decks[index];
 
             nameTV.setText(deck.getName());
-            winPercentageTV.setText("" + deck.getWinPercentage());
+            winPercentageTV.setText(String.format(getResources().getString(R.string.win_percentage_message), deck.getWinPercentage()));
+            progressBar.setProgress(deck.getWinPercentage());
+
 
 
         } else {

@@ -1,5 +1,7 @@
 package com.example.cross.decknotes.Data;
 
+import android.util.Log;
+
 public class Deck
 {
     private String name;
@@ -29,11 +31,12 @@ public class Deck
         numberOfPlays++;
     }
 
-    public double getWinPercentage()
+    public int getWinPercentage()
     {
         if(numberOfPlays != 0)
         {
-            return ((double)numberOfWins / (double)numberOfPlays * 100);
+            float percentage = ((float)numberOfWins / (float)numberOfPlays * 100);
+            return Math.round(percentage);
         }
         else
         {

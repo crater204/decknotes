@@ -12,16 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="16dp"
-        android:textSize="16sp"/>
+        android:textSize="32sp"/>
 
     <TextView
         android:id="@+id/detail_win_percentage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="16dp"
-        android:textSize="16sp"/>
+        android:textSize="18sp"/>
 
     <ProgressBar
+        android:id="@+id/detail_progress_bar"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -36,14 +37,16 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0px"
             android:layout_height="wrap_content"
-            android:text="Win"/>
+            android:text="Win"
+            android:layout_weight="1"/>
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0px"
             android:layout_height="wrap_content"
-            android:text="Lose"/>
+            android:text="Lose"
+            android:layout_weight="1"/>
     </android.support.v7.widget.ButtonBarLayout>
 
 </LinearLayout>
