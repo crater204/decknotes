@@ -1,13 +1,16 @@
 package com.example.cross.decknotes;
 
-import android.support.v7.app.AppCompatActivity;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.cross.decknotes.Data.Deck;
-import com.example.cross.decknotes.Data.DeckData;
+import com.example.cross.decknotes.DataBase.Entities.DeckEntity;
+import com.example.cross.decknotes.DataBase.ViewModel.DeckViewModel;
 
 public class DeckDetails extends AppCompatActivity
 {
@@ -17,19 +20,32 @@ public class DeckDetails extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deck_details);
 
-        if(getIntent().hasExtra("DeckIndex")) {
-            int index = (int)getIntent().getExtras().get("DeckIndex");
-            Toast.makeText(getApplicationContext(), "Details: " + index, Toast.LENGTH_SHORT).show();
+        if(getIntent().hasExtra("DeckId"))
+        {
+            int id = (int)getIntent().getExtras().get("DeckId");
+            Toast.makeText(getApplicationContext(), "Details: " + id, Toast.LENGTH_SHORT).show();
 
-            TextView nameTV = findViewById(R.id.detail_name);
-            TextView winPercentageTV = findViewById(R.id.detail_win_percentage);
-            ProgressBar progressBar = findViewById(R.id.detail_progress_bar);
-            Deck deck = DeckData.decks[index];
+            DeckViewModel deckViewModel = ViewModelProviders.of(this).get(DeckViewModel.class);
+            deckViewModel.getDeckById(id).observe(this, new Observer<DeckEntity>()
+            {
+                @Override
+                public void onChanged(@Nullable DeckEntity deck)
+                {
+                    if(deck != null)
+                    {
+                        TextView nameTV = findViewById(R.id.detail_name);
+                        TextView winPercentageTV = findViewById(R.id.detail_win_percentage);
+                        ProgressBar progressBar = findViewById(R.id.detail_progress_bar);
 
-            nameTV.setText(deck.getName());
-            winPercentageTV.setText(String.format(getResources().getString(R.string.win_percentage_message), deck.getWinPercentage()));
-            progressBar.setProgress(deck.getWinPercentage());
-        } else {
+                        nameTV.setText(deck.getName());
+                        winPercentageTV.setText(String.format(getResources().getString(R.string.win_percentage_message), deck.getWinPercentage()));
+                        progressBar.setProgress(deck.getWinPercentage());
+                    }
+                }
+            });
+        }
+        else
+        {
             Toast.makeText(getApplicationContext(), "No Extras", Toast.LENGTH_SHORT).show();
         }
     }

@@ -54,19 +54,18 @@ public class DeckEntity
         return numberOfPlays;
     }
 
-    public void setNumberOfPlays(int numberOfPlays)
-    {
-        this.numberOfPlays = numberOfPlays;
-    }
-
     public int getNumberOfWins()
     {
         return numberOfWins;
     }
 
-    public void setNumberOfWins(int numberOfWins)
-    {
-        this.numberOfWins = numberOfWins;
+    public void addWin() {
+        numberOfPlays++;
+        numberOfWins++;
+    }
+
+    public void addLoss() {
+        numberOfPlays++;
     }
 
     public int getWinPercentage()

@@ -19,4 +19,6 @@ public interface DeckDao
     @Query("SELECT * from deck_table")
     LiveData<List<DeckEntity>> getAllDecks();
 
+    @Query("SELECT * from deck_table WHERE id = :id")
+    LiveData<DeckEntity> getDeckById(int id);
 }

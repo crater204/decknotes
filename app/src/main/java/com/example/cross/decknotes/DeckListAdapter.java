@@ -57,6 +57,10 @@ public class DeckListAdapter extends RecyclerView.Adapter<DeckListAdapter.DeckVi
         }
     }
 
+    DeckEntity getDeck(int position) {
+        return decks.get(position);
+    }
+
     void setDecks(List<DeckEntity> decks)
     {
         this.decks = decks;

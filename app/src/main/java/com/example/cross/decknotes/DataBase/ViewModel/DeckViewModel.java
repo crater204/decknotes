@@ -25,6 +25,10 @@ public class DeckViewModel extends AndroidViewModel
         return allDecks;
     }
 
+    public LiveData<DeckEntity> getDeckById(int id) {
+        return repository.getDeckById(id);
+    }
+
     public void insert(DeckEntity deck) {
         repository.insertDeck(deck);
     }

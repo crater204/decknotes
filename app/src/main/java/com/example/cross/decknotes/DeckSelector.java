@@ -6,6 +6,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -46,7 +47,7 @@ public class DeckSelector extends AppCompatActivity implements AddDeckDialog.Dec
         });
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        RecyclerView recyclerView = findViewById(R.id.deck_selector_recycler_view);
+        final RecyclerView recyclerView = findViewById(R.id.deck_selector_recycler_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new DeckListAdapter(this);
@@ -57,6 +58,10 @@ public class DeckSelector extends AppCompatActivity implements AddDeckDialog.Dec
             @Override
             public void onClick(View view, int position)
             {
+                Intent i = new Intent(getApplicationContext(), DeckDetails.class);
+                DeckEntity deck = adapter.getDeck(position);
+                i.putExtra("DeckId", deck.getId());
+                startActivity(i);
                 Toast.makeText(getApplicationContext(), "hello world! Click!", Toast.LENGTH_SHORT).show();
             }
         }));
