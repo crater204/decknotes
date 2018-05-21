@@ -29,9 +29,6 @@ public class DeckDetails extends AppCompatActivity
             nameTV.setText(deck.getName());
             winPercentageTV.setText(String.format(getResources().getString(R.string.win_percentage_message), deck.getWinPercentage()));
             progressBar.setProgress(deck.getWinPercentage());
-
-
-
         } else {
             Toast.makeText(getApplicationContext(), "No Extras", Toast.LENGTH_SHORT).show();
         }

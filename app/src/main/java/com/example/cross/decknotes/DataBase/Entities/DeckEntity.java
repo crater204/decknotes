@@ -1,6 +1,7 @@
 package com.example.cross.decknotes.DataBase.Entities;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
@@ -16,6 +17,11 @@ public class DeckEntity
     private int numberOfPlays;
 
     private int numberOfWins;
+
+    @Ignore
+    public DeckEntity(@NonNull String name) {
+        this(name, 0 ,0 );
+    }
 
     public DeckEntity(@NonNull String name, int numberOfPlays, int numberOfWins) {
         this.name = name;
@@ -61,5 +67,18 @@ public class DeckEntity
     public void setNumberOfWins(int numberOfWins)
     {
         this.numberOfWins = numberOfWins;
+    }
+
+    public int getWinPercentage()
+    {
+        if(numberOfPlays != 0)
+        {
+            float percentage = ((float)numberOfWins / (float)numberOfPlays * 100);
+            return Math.round(percentage);
+        }
+        else
+        {
+            return 0;
+        }
     }
 }

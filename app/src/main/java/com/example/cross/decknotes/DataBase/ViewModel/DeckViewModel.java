@@ -21,6 +21,10 @@ public class DeckViewModel extends AndroidViewModel
         allDecks = repository.getAllDecks();
     }
 
+    public LiveData<List<DeckEntity>> getAllDecks() {
+        return allDecks;
+    }
+
     public void insert(DeckEntity deck) {
         repository.insertDeck(deck);
     }

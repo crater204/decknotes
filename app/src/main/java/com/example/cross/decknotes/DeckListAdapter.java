@@ -13,36 +13,24 @@ import java.util.List;
 
 public class DeckListAdapter extends RecyclerView.Adapter<DeckListAdapter.DeckViewHolder>
 {
-    class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    class DeckViewHolder extends RecyclerView.ViewHolder
     {
-        private RecyclerViewClickListener listener;
-        private final TextView deckItemView;
+        private final TextView deckName;
+        private final TextView winPercentage;
 
-        private DeckViewHolder(View itemView, RecyclerViewClickListener listener)
+        private DeckViewHolder(View itemView)
         {
             super(itemView);
-            this.listener = listener;
-            deckItemView = itemView.findViewById(R.id.deck_selector_text_view);
-        }
-
-        @Override
-        public void onClick(View view)
-        {
-            listener.onClick(view, getAdapterPosition());
+            deckName = itemView.findViewById(R.id.deck_selector_text_view);
+            winPercentage = itemView.findViewById(R.id.deck_selector_win_percentage);
         }
     }
 
-    interface RecyclerViewClickListener {
-        void onClick(View view, int position);
-    }
-
-    private RecyclerViewClickListener listener;
     private final LayoutInflater inflater;
     private List<DeckEntity> decks;
 
-    DeckListAdapter(Context context, RecyclerViewClickListener listener)
+    DeckListAdapter(Context context)
     {
-        this.listener = listener;
         inflater = LayoutInflater.from(context);
     }
 
@@ -50,7 +38,7 @@ public class DeckListAdapter extends RecyclerView.Adapter<DeckListAdapter.DeckVi
     public DeckViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         View itemView = inflater.inflate(R.layout.deck_selector_line, parent, false);
-        return new DeckViewHolder(itemView, listener);
+        return new DeckViewHolder(itemView);
     }
 
     @Override
@@ -59,11 +47,13 @@ public class DeckListAdapter extends RecyclerView.Adapter<DeckListAdapter.DeckVi
         if(decks != null)
         {
             DeckEntity current = decks.get(position);
-            holder.deckItemView.setText(current.getName());
+            holder.deckName.setText(current.getName());
+            holder.winPercentage.setText(current.getWinPercentage() + "%");
         }
         else
         {
-            holder.deckItemView.setText("No Deck");
+            holder.deckName.setText("No Deck");
+            holder.winPercentage.setText("");
         }
     }
 
