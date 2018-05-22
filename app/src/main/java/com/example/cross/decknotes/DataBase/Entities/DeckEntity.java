@@ -59,15 +59,6 @@ public class DeckEntity
         return numberOfWins;
     }
 
-    public void addWin() {
-        numberOfPlays++;
-        numberOfWins++;
-    }
-
-    public void addLoss() {
-        numberOfPlays++;
-    }
-
     public int getWinPercentage()
     {
         if(numberOfPlays != 0)

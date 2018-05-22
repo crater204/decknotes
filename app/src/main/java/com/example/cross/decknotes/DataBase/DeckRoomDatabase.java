@@ -1,16 +1,16 @@
 package com.example.cross.decknotes.DataBase;
 
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.*;
 import android.content.Context;
 
 import com.example.cross.decknotes.DataBase.Dao.DeckDao;
 import com.example.cross.decknotes.DataBase.Dao.RecordDao;
 import com.example.cross.decknotes.DataBase.Entities.DeckEntity;
 import com.example.cross.decknotes.DataBase.Entities.RecordEntity;
+import com.example.cross.decknotes.TypeConverters.DateTypeConverter;
 
 @Database(entities = {DeckEntity.class, RecordEntity.class}, version = 1)
+@TypeConverters({DateTypeConverter.class})
 public abstract class DeckRoomDatabase extends RoomDatabase
 {
     public abstract DeckDao deckDao();

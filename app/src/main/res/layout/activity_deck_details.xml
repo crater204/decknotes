@@ -37,12 +37,14 @@
         android:layout_height="wrap_content">
 
         <Button
+            android:id="@+id/detail_win_button"
             android:layout_width="0px"
             android:layout_height="wrap_content"
             android:text="Win"
             android:layout_weight="1"/>
 
         <Button
+            android:id="@+id/detail_lose_button"
             android:layout_width="0px"
             android:layout_height="wrap_content"
             android:text="Lose"

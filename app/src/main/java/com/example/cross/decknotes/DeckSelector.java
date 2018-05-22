@@ -1,11 +1,8 @@
 package com.example.cross.decknotes;
 
-import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,10 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cross.decknotes.DataBase.Entities.DeckEntity;
@@ -83,7 +78,7 @@ public class DeckSelector extends AppCompatActivity implements AddDeckDialog.Dec
         String deckName = deckNameEditText.getText().toString();
         System.out.println(deckName);
         DeckEntity deck = new DeckEntity(deckName);
-        deckViewModel.insert(deck);
+        deckViewModel.insertDeck(deck);
     }
 
     @Override

@@ -36,9 +36,9 @@ public class DeckRepository
         new InsertDeckAsyncTask(deckDao).execute(deck);
     }
 
-    public void insertRecord(RecordEntity record)
+    public void insertMatch(RecordEntity record)
     {
-        new InsertRecordAsyncTask(recordDao).execute(record);
+        new InsertRecordAsyncTask(recordDao, deckDao).execute(record);
     }
 
     public LiveData<DeckEntity> getDeckById(int id)
@@ -48,34 +48,41 @@ public class DeckRepository
 
     private static class InsertDeckAsyncTask extends AsyncTask<DeckEntity, Void, Void>
     {
-        private DeckDao asyncTaskDao;
+        private DeckDao deckDao;
 
         InsertDeckAsyncTask(DeckDao dao)
         {
-            asyncTaskDao = dao;
+            deckDao = dao;
         }
 
         @Override
         protected Void doInBackground(final DeckEntity... params)
         {
-            asyncTaskDao.insert(params[0]);
+            deckDao.insert(params[0]);
             return null;
         }
     }
 
     private static class InsertRecordAsyncTask extends AsyncTask<RecordEntity, Void, Void>
     {
-        private RecordDao asyncTaskDao;
+        private RecordDao recordDao;
+        private DeckDao deckDao;
 
-        InsertRecordAsyncTask(RecordDao dao)
+        InsertRecordAsyncTask(RecordDao record, DeckDao deck )
         {
-            asyncTaskDao = dao;
+            recordDao = record;
+            deckDao = deck;
         }
 
         @Override
         protected Void doInBackground(final RecordEntity... params)
         {
-            asyncTaskDao.insert(params[0]);
+            RecordEntity record = params[0];
+            recordDao.insert(record);
+            if(record.isWin()) {
+                deckDao.addWin(record.getDeckId());
+            }
+            deckDao.addPlay(record.getDeckId());
             return null;
         }
     }

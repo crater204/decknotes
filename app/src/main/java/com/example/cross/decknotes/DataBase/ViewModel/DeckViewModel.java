@@ -5,8 +5,10 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 
 import com.example.cross.decknotes.DataBase.Entities.DeckEntity;
+import com.example.cross.decknotes.DataBase.Entities.RecordEntity;
 import com.example.cross.decknotes.DeckRepository;
 
+import java.util.Date;
 import java.util.List;
 
 public class DeckViewModel extends AndroidViewModel
@@ -29,7 +31,13 @@ public class DeckViewModel extends AndroidViewModel
         return repository.getDeckById(id);
     }
 
-    public void insert(DeckEntity deck) {
+    public void insertMatch(int deckId, boolean isWin) {
+        System.out.println(new Date());
+        RecordEntity record = new RecordEntity(deckId, new Date(), isWin);
+        repository.insertMatch(record);
+    }
+
+    public void insertDeck(DeckEntity deck) {
         repository.insertDeck(deck);
     }
 }

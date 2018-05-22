@@ -5,6 +5,8 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,6 +16,9 @@ import com.example.cross.decknotes.DataBase.ViewModel.DeckViewModel;
 
 public class DeckDetails extends AppCompatActivity
 {
+    private DeckEntity deck;
+    private DeckViewModel deckViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -25,14 +30,15 @@ public class DeckDetails extends AppCompatActivity
             int id = (int)getIntent().getExtras().get("DeckId");
             Toast.makeText(getApplicationContext(), "Details: " + id, Toast.LENGTH_SHORT).show();
 
-            DeckViewModel deckViewModel = ViewModelProviders.of(this).get(DeckViewModel.class);
+            deckViewModel = ViewModelProviders.of(this).get(DeckViewModel.class);
             deckViewModel.getDeckById(id).observe(this, new Observer<DeckEntity>()
             {
                 @Override
-                public void onChanged(@Nullable DeckEntity deck)
+                public void onChanged(@Nullable DeckEntity deckEntity)
                 {
-                    if(deck != null)
+                    if(deckEntity != null)
                     {
+                        deck = deckEntity;
                         TextView nameTV = findViewById(R.id.detail_name);
                         TextView winPercentageTV = findViewById(R.id.detail_win_percentage);
                         ProgressBar progressBar = findViewById(R.id.detail_progress_bar);
@@ -48,5 +54,25 @@ public class DeckDetails extends AppCompatActivity
         {
             Toast.makeText(getApplicationContext(), "No Extras", Toast.LENGTH_SHORT).show();
         }
+
+        Button winButton = findViewById(R.id.detail_win_button);
+        Button loseButton = findViewById(R.id.detail_lose_button);
+
+        winButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                deckViewModel.insertMatch(deck.getId(), true);
+            }
+        });
+        loseButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                deckViewModel.insertMatch(deck.getId(), false);
+            }
+        });
     }
 }

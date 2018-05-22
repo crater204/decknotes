@@ -21,4 +21,10 @@ public interface DeckDao
 
     @Query("SELECT * from deck_table WHERE id = :id")
     LiveData<DeckEntity> getDeckById(int id);
+
+    @Query("UPDATE deck_table SET numberOfWins = numberOfWins + 1 WHERE id = :deckId")
+    void addWin(int deckId);
+
+    @Query("UPDATE deck_table SET numberOfPlays = numberOfPlays + 1 WHERE id = :deckId")
+    void addPlay(int deckId);
 }

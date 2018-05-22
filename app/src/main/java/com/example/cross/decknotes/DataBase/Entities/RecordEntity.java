@@ -4,6 +4,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.util.Date;
+
 @Entity(tableName = "record_table")
 public class RecordEntity
 {
@@ -23,11 +25,11 @@ public class RecordEntity
     }
 
     @NonNull
-    private String date;
+    private Date date;
 
     private boolean isWin;
 
-    public RecordEntity(int deckId, @NonNull String date, boolean isWin) {
+    public RecordEntity(int deckId, @NonNull Date date, boolean isWin) {
         this.deckId = deckId;
         this.date = date;
         this.isWin = isWin;
@@ -44,12 +46,12 @@ public class RecordEntity
     }
 
     @NonNull
-    public String getDate()
+    public Date getDate()
     {
         return date;
     }
 
-    public void setDate(@NonNull String date)
+    public void setDate(@NonNull Date date)
     {
         this.date = date;
     }
