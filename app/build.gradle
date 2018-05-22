@@ -39,4 +39,7 @@ dependencies {
 
     // Recycler View
     implementation 'com.android.support:recyclerview-v7:27.1.1'
+
+    // Graphing Library
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.0-beta1'
 }

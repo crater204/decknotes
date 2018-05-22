@@ -46,6 +46,8 @@ public class DeckRepository
         return deckDao.getDeckById(id);
     }
 
+    public LiveData<List<RecordEntity>> getRecordsByDeckId(int deckId) { return recordDao.getRecordsForDeck(deckId); }
+
     private static class InsertDeckAsyncTask extends AsyncTask<DeckEntity, Void, Void>
     {
         private DeckDao deckDao;

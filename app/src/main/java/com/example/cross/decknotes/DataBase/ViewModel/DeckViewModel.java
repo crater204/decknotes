@@ -14,30 +14,57 @@ import java.util.List;
 public class DeckViewModel extends AndroidViewModel
 {
     private DeckRepository repository;
-
     private LiveData<List<DeckEntity>> allDecks;
 
-    public DeckViewModel(Application application) {
+    public DeckViewModel(Application application)
+    {
         super(application);
         repository = new DeckRepository(application);
         allDecks = repository.getAllDecks();
     }
 
-    public LiveData<List<DeckEntity>> getAllDecks() {
+    public LiveData<List<DeckEntity>> getAllDecks()
+    {
         return allDecks;
     }
 
-    public LiveData<DeckEntity> getDeckById(int id) {
+    public LiveData<DeckEntity> getDeckById(int id)
+    {
         return repository.getDeckById(id);
     }
 
-    public void insertMatch(int deckId, boolean isWin) {
+    public LiveData<List<RecordEntity>> getRecordsForDeck(int deckId)
+    {
+        return repository.getRecordsByDeckId(deckId);
+    }
+
+    public void insertMatch(int deckId, boolean isWin)
+    {
         System.out.println(new Date());
         RecordEntity record = new RecordEntity(deckId, new Date(), isWin);
         repository.insertMatch(record);
     }
 
-    public void insertDeck(DeckEntity deck) {
+    public void insertTestMatches(int deckId)
+    {
+        repository.insertMatch(new RecordEntity(deckId, new Date(2018, 4, 12), true));
+        repository.insertMatch(new RecordEntity(deckId, new Date(2018, 4, 12), false));
+        repository.insertMatch(new RecordEntity(deckId, new Date(2018, 4, 12), true));
+        repository.insertMatch(new RecordEntity(deckId, new Date(2018, 4, 12), true));
+        repository.insertMatch(new RecordEntity(deckId, new Date(2018, 4, 15), false));
+        repository.insertMatch(new RecordEntity(deckId, new Date(2018, 4, 15), true));
+        repository.insertMatch(new RecordEntity(deckId, new Date(2018, 4, 15), true));
+        repository.insertMatch(new RecordEntity(deckId, new Date(2018, 4, 15), true));
+        repository.insertMatch(new RecordEntity(deckId, new Date(2018, 4, 15), false));
+        repository.insertMatch(new RecordEntity(deckId, new Date(2018, 4, 15), true));
+        repository.insertMatch(new RecordEntity(deckId, new Date(2018, 4, 15), true));
+        repository.insertMatch(new RecordEntity(deckId, new Date(2018, 4, 15), true));
+        repository.insertMatch(new RecordEntity(deckId, new Date(2018, 4, 16), true));
+        repository.insertMatch(new RecordEntity(deckId, new Date(2018, 4, 16), false));
+    }
+
+    public void insertDeck(DeckEntity deck)
+    {
         repository.insertDeck(deck);
     }
 }
