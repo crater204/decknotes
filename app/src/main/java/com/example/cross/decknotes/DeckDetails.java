@@ -5,9 +5,10 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +22,10 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.AxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,6 +38,13 @@ public class DeckDetails extends AppCompatActivity
     private DeckViewModel deckViewModel;
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.details, menu);
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -42,7 +53,6 @@ public class DeckDetails extends AppCompatActivity
         if(getIntent().hasExtra("DeckId"))
         {
             int id = (int)getIntent().getExtras().get("DeckId");
-            Toast.makeText(getApplicationContext(), "Details: " + id, Toast.LENGTH_SHORT).show();
 
             deckViewModel = ViewModelProviders.of(this).get(DeckViewModel.class);
             deckViewModel.getDeckById(id).observe(this, new Observer<DeckEntity>()
@@ -59,115 +69,13 @@ public class DeckDetails extends AppCompatActivity
                         nameTV.setText(deck.getName());
                         winPercentageTV.setText(String.format(getResources().getString(R.string.win_percentage_message), deck.getWinPercentage()));
 
-
                         deckViewModel.getRecordsForDeck(deck.getId())
                                 .observe(DeckDetails.this, new Observer<List<RecordEntity>>()
                                 {
                                     @Override
                                     public void onChanged(@Nullable List<RecordEntity> recordEntities)
                                     {
-                                        if(recordEntities != null)
-                                        {
-                                            SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd yyyy", Locale.US);
-                                            ArrayList<String> dates = new ArrayList<>();
-
-                                            for(int i = 0; i < recordEntities.size(); i++)
-                                            {
-                                                String formattedDate = dateFormatter.format(recordEntities.get(i)
-                                                                                                    .getDate());
-                                                if(!dates.contains(formattedDate))
-                                                {
-                                                    dates.add(formattedDate);
-                                                }
-                                            }
-                                            // Shrink it to just the last 4
-                                            if(dates.size() > 4)
-                                            {
-                                                ArrayList<String> temp = new ArrayList<>();
-                                                for(int j = 4; j >= 1; j--)
-                                                {
-                                                    temp.add(dates.get(j));
-                                                }
-                                                dates = temp;
-                                            }
-                                            ArrayList<BarEntry> barEntries = new ArrayList<>();
-                                            for(int dateIndex = 0; dateIndex < dates.size(); dateIndex++)
-                                            {
-                                                int winCount = 0;
-                                                int playCount = 0;
-                                                for(int recordIndex = 0;
-                                                        recordIndex < recordEntities.size(); recordIndex++)
-                                                {
-                                                    if(dateFormatter.format(recordEntities.get(recordIndex).getDate())
-                                                               .equals(dates.get(dateIndex)))
-                                                    {
-                                                        if(recordEntities.get(recordIndex).isWin())
-                                                        {
-                                                            winCount++;
-                                                        }
-                                                        playCount++;
-                                                    }
-                                                }
-                                                int value = (int)(((double)winCount / (double)playCount) * 100);
-                                                barEntries.add(new BarEntry(dateIndex, value));
-                                            }
-                                            BarDataSet dataSet = new BarDataSet(barEntries, "Win Percentages");
-                                            BarData data = new BarData(dataSet);
-                                            data.setBarWidth(0.9f);
-                                            data.setValueTextSize(16);
-                                            BarChart chart = findViewById(R.id.bar_chart);
-                                            chart.setData(data);
-                                            chart.getAxisRight().setEnabled(false);
-                                            YAxis leftAxis = chart.getAxisLeft();
-                                            leftAxis.setAxisMaxValue(100);
-                                            leftAxis.setAxisMinValue(0);
-                                            leftAxis.setTextSize(16);
-                                            leftAxis.setDrawAxisLine(false);
-
-                                            String[] tempDates = new String[dates.size()];
-                                            for(int i =0; i < tempDates.length; i++) {
-                                                tempDates[i] = dates.get(i).substring(0, 6);
-                                            }
-
-                                            final String[] axisDates = tempDates;
-
-                                            AxisValueFormatter formatter = new AxisValueFormatter()
-                                            {
-                                                @Override
-                                                public String getFormattedValue(float value, AxisBase axis)
-                                                {
-                                                    if( value >= 0 && axisDates[(int)value] != null)
-                                                    {
-                                                        return axisDates[(int)value];
-                                                    }
-                                                    else
-                                                    {
-                                                        return "FAIL";
-                                                    }
-                                                }
-
-                                                @Override
-                                                public int getDecimalDigits()
-                                                {
-                                                    return 0;
-                                                }
-                                            };
-
-                                            XAxis xAxis = chart.getXAxis();
-                                            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                                            xAxis.setGranularity(1);
-                                            xAxis.setValueFormatter(formatter);
-                                            xAxis.setAxisMinValue(-0.6f);
-                                            xAxis.setAxisMaxValue(dates.size() - 0.4f);
-                                            xAxis.setTextSize(16f);
-                                            xAxis.setDrawGridLines(false);
-
-                                            chart.setDescription("");
-                                            chart.getLegend().setEnabled(false);
-                                            chart.setFitBars(true);
-                                            chart.setExtraOffsets(0,16,0,16);
-                                            chart.invalidate();
-                                        }
+                                        setupBarGraph(recordEntities);
                                     }
                                 });
                     }
@@ -176,7 +84,7 @@ public class DeckDetails extends AppCompatActivity
         }
         else
         {
-            Toast.makeText(getApplicationContext(), "No Extras", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Error: No Extras", Toast.LENGTH_SHORT).show();
         }
 
         Button winButton = findViewById(R.id.detail_win_button);
@@ -198,5 +106,127 @@ public class DeckDetails extends AppCompatActivity
                 deckViewModel.insertMatch(deck.getId(), false);
             }
         });
+    }
+
+    private void setupBarGraph(@Nullable List<RecordEntity> recordEntities)
+    {
+        if(recordEntities != null)
+        {
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd yyyy", Locale.US);
+            ArrayList<String> dates = new ArrayList<>();
+
+            for(int i = 0; i < recordEntities.size(); i++)
+            {
+                String formattedDate = dateFormatter.format(recordEntities.get(i).getDate());
+                if(!dates.contains(formattedDate))
+                {
+                    dates.add(formattedDate);
+                }
+            }
+            // Shrink it to just the last 4
+            if(dates.size() > 4)
+            {
+                ArrayList<String> temp = new ArrayList<>();
+                for(int j = 4; j >= 1; j--)
+                {
+                    temp.add(dates.get(j));
+                }
+                dates = temp;
+            }
+            ArrayList<BarEntry> barEntries = new ArrayList<>();
+            for(int dateIndex = 0; dateIndex < dates.size(); dateIndex++)
+            {
+                int winCount = 0;
+                int playCount = 0;
+                for(int recordIndex = 0; recordIndex < recordEntities.size(); recordIndex++)
+                {
+                    if(dateFormatter.format(recordEntities.get(recordIndex).getDate()).equals(dates.get(dateIndex)))
+                    {
+                        if(recordEntities.get(recordIndex).isWin())
+                        {
+                            winCount++;
+                        }
+                        playCount++;
+                    }
+                }
+                float percentage = ((float)winCount / (float)playCount * 100);
+                int value = Math.round(percentage);
+                barEntries.add(new BarEntry(dateIndex, value));
+            }
+
+            BarDataSet dataSet = new BarDataSet(barEntries, "Win Percentages");
+            dataSet.setHighlightEnabled(false);
+            dataSet.setValueFormatter(new ValueFormatter()
+            {
+                @Override
+                public String getFormattedValue(float value, Entry entry, int dataSetIndex,
+                                                ViewPortHandler viewPortHandler)
+                {
+                    return String.valueOf((int) value + "%");
+                }
+            });
+            BarData data = new BarData(dataSet);
+            data.setBarWidth(0.9f);
+            data.setValueTextSize(16);
+            BarChart chart = findViewById(R.id.bar_chart);
+            chart.setData(data);
+            chart.setScaleEnabled(false);
+            chart.setDoubleTapToZoomEnabled(false);
+            chart.setPinchZoom(false);
+
+            YAxis rightAxis = chart.getAxisRight();
+            rightAxis.setEnabled(false);
+
+            YAxis leftAxis = chart.getAxisLeft();
+            leftAxis.setAxisMaxValue(100);
+            leftAxis.setAxisMinValue(0);
+            leftAxis.setTextSize(16);
+            leftAxis.setDrawAxisLine(false);
+
+            String[] tempDates = new String[dates.size()];
+            for(int i = 0; i < tempDates.length; i++)
+            {
+                tempDates[i] = dates.get(i).substring(0, 6);
+            }
+
+            final String[] axisDates = tempDates;
+
+            AxisValueFormatter formatter = new AxisValueFormatter()
+            {
+                @Override
+                public String getFormattedValue(float value, AxisBase axis)
+                {
+                    if(value >= 0 && axisDates[(int)value] != null)
+                    {
+                        return axisDates[(int)value];
+                    }
+                    else
+                    {
+                        return "FAIL";
+                    }
+                }
+
+                @Override
+                public int getDecimalDigits()
+                {
+                    return 0;
+                }
+            };
+
+            XAxis xAxis = chart.getXAxis();
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setGranularity(1);
+            xAxis.setValueFormatter(formatter);
+            xAxis.setAxisMinValue(-0.6f);
+            xAxis.setAxisMaxValue(dates.size() - 0.4f);
+            xAxis.setTextSize(16f);
+            xAxis.setDrawGridLines(false);
+
+            chart.setDescription("");
+            chart.getLegend().setEnabled(false);
+            chart.setFitBars(true);
+            chart.setExtraOffsets(0, 16, 0, 16);
+            chart.invalidate();
+        }
     }
 }

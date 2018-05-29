@@ -13,7 +13,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.cross.decknotes.DataBase.Entities.DeckEntity;
 import com.example.cross.decknotes.DataBase.ViewModel.DeckViewModel;
@@ -57,7 +56,6 @@ public class DeckSelector extends AppCompatActivity implements AddDeckDialog.Dec
                 DeckEntity deck = adapter.getDeck(position);
                 i.putExtra("DeckId", deck.getId());
                 startActivity(i);
-                Toast.makeText(getApplicationContext(), "hello world! Click!", Toast.LENGTH_SHORT).show();
             }
         }));
         fab.setOnClickListener(new View.OnClickListener()
@@ -84,6 +82,6 @@ public class DeckSelector extends AppCompatActivity implements AddDeckDialog.Dec
     @Override
     public void onDialogNegativeClick(DialogFragment dialog)
     {
-        System.out.println("Negative Click Listener");
+        // Nothing special needs to happen. The dialog dismisses itself
     }
 }
