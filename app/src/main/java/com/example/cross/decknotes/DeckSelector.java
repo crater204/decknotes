@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -11,12 +12,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.cross.decknotes.DataBase.Entities.DeckEntity;
 import com.example.cross.decknotes.DataBase.ViewModel.DeckViewModel;
 import com.example.cross.decknotes.Dialogs.AddDeckDialog;
+import com.example.cross.decknotes.Dialogs.EmailDialog;
 
 import java.util.List;
 
@@ -24,6 +31,28 @@ public class DeckSelector extends AppCompatActivity implements AddDeckDialog.Dec
 {
     private DeckViewModel deckViewModel;
     private DeckListAdapter adapter;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch(item.getItemId())
+        {
+            case R.id.action_contact_me:
+                EmailDialog email = new EmailDialog();
+                email.show(getFragmentManager(), "EmailDialog");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -73,11 +102,32 @@ public class DeckSelector extends AppCompatActivity implements AddDeckDialog.Dec
     @Override
     public void onDialogPositiveClick(DialogFragment dialog)
     {
-        EditText deckNameEditText = dialog.getDialog().findViewById(R.id.deck_name_edit_text);
-        String deckName = deckNameEditText.getText().toString();
-        System.out.println(deckName);
-        DeckEntity deck = new DeckEntity(deckName);
-        deckViewModel.insertDeck(deck);
+        switch(dialog.getTag())
+        {
+            case "AddDeckDialog":
+                EditText deckNameEditText = dialog.getDialog().findViewById(R.id.deck_name_edit_text);
+                String deckName = deckNameEditText.getText().toString();
+                System.out.println(deckName);
+                DeckEntity deck = new DeckEntity(deckName);
+                deckViewModel.insertDeck(deck);
+                break;
+            case "EmailDialog":
+                Spinner spinner = dialog.getDialog().findViewById(R.id.email_spinner);
+                String emailSubject = (String)spinner.getSelectedItem();
+
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto:"));
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"decknotes@gmail.com"});
+                intent.putExtra(Intent.EXTRA_SUBJECT, emailSubject);
+                if(intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(DeckSelector.this, "No email app present :( . Send an email to decknotes@gmail.com", Toast.LENGTH_LONG).show();
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

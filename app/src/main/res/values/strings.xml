@@ -9,4 +9,6 @@
     <string name="edit">Edit</string>
     <string name="confirm_delete">Are you sure?</string>
     <string name="delete">Delete</string>
+    <string name="email_title">What do you want to talk about?</string>
+    <string name="email_positive">Open Email</string>
 </resources>
