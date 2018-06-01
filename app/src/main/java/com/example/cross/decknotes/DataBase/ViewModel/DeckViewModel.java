@@ -38,11 +38,20 @@ public class DeckViewModel extends AndroidViewModel
         return repository.getRecordsByDeckId(deckId);
     }
 
+    public void editDeckName(DeckEntity deck, String newName) {
+        deck.setName(newName);
+        repository.updateDeck(deck);
+    }
+
     public void insertMatch(int deckId, boolean isWin)
     {
         System.out.println(new Date());
         RecordEntity record = new RecordEntity(deckId, new Date(), isWin);
         repository.insertMatch(record);
+    }
+
+    public void deleteDeck(DeckEntity deck) {
+        repository.deleteDeck(deck);
     }
 
     public void insertTestMatches(int deckId)

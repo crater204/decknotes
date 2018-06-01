@@ -1,20 +1,27 @@
 package com.example.cross.decknotes;
 
+import android.app.DialogFragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cross.decknotes.DataBase.Entities.DeckEntity;
 import com.example.cross.decknotes.DataBase.Entities.RecordEntity;
 import com.example.cross.decknotes.DataBase.ViewModel.DeckViewModel;
+import com.example.cross.decknotes.Dialogs.BaseDialog;
+import com.example.cross.decknotes.Dialogs.ConfirmDeleteDialog;
+import com.example.cross.decknotes.Dialogs.EditDeckNameDialog;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
@@ -32,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class DeckDetails extends AppCompatActivity
+public class DeckDetails extends AppCompatActivity implements BaseDialog.DeckDialogListener
 {
     private DeckEntity deck;
     private DeckViewModel deckViewModel;
@@ -42,6 +49,22 @@ public class DeckDetails extends AppCompatActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.details, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch( item.getItemId()) {
+            case R.id.action_edit:
+                EditDeckNameDialog editDialog = new EditDeckNameDialog();
+                editDialog.show(getFragmentManager(), "EditDeckDialog");
+                return true;
+            case R.id.action_delete:
+                ConfirmDeleteDialog deleteDialog = new ConfirmDeleteDialog();
+                deleteDialog.show(getFragmentManager(), "ConfirmDeleteDialog");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -196,7 +219,8 @@ public class DeckDetails extends AppCompatActivity
                 @Override
                 public String getFormattedValue(float value, AxisBase axis)
                 {
-                    if(value >= 0 && axisDates[(int)value] != null)
+                    int formattedValue = (int)value;
+                    if(formattedValue >= 0 && formattedValue < axisDates.length && axisDates[(int)value] != null)
                     {
                         return axisDates[(int)value];
                     }
@@ -228,5 +252,31 @@ public class DeckDetails extends AppCompatActivity
             chart.setExtraOffsets(0, 16, 0, 16);
             chart.invalidate();
         }
+    }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog)
+    {
+        switch(dialog.getTag()) {
+            case "EditDeckDialog":
+                EditText deckNameEditText = dialog.getDialog().findViewById(R.id.deck_name_edit_text);
+                String newName = deckNameEditText.getText().toString();
+                deckViewModel.editDeckName(deck, newName);
+                break;
+            case "ConfirmDeleteDialog":
+                deckViewModel.deleteDeck(deck);
+                Intent i = new Intent(this, DeckSelector.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+                break;
+            default:
+                throw new Error("No dialog was handled");
+        }
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog)
+    {
+        // nothing need to be done when the user hits cancel
     }
 }

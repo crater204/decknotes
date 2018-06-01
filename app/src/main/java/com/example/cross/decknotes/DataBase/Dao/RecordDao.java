@@ -17,4 +17,7 @@ public interface RecordDao
 
     @Query("SELECT * from record_table WHERE deckId = :deckId")
     LiveData<List<RecordEntity>> getRecordsForDeck(int deckId);
+
+    @Query("DELETE from record_table WHERE deckId = :deckId")
+    void deleteRecords(int deckId);
 }

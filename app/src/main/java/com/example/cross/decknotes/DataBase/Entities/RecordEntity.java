@@ -14,16 +14,6 @@ public class RecordEntity
 
     private int deckId;
 
-    public int getRecordId()
-    {
-        return recordId;
-    }
-
-    public void setRecordId(int recordId)
-    {
-        this.recordId = recordId;
-    }
-
     @NonNull
     private Date date;
 
@@ -64,5 +54,15 @@ public class RecordEntity
     public void setWin(boolean win)
     {
         isWin = win;
+    }
+
+    public int getRecordId()
+    {
+        return recordId;
+    }
+
+    public void setRecordId(int recordId)
+    {
+        this.recordId = recordId;
     }
 }

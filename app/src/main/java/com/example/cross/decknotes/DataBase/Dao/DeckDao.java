@@ -1,11 +1,8 @@
 package com.example.cross.decknotes.DataBase.Dao;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.Query;
+import android.arch.persistence.room.*;
 
-import com.example.cross.decknotes.Data.Deck;
 import com.example.cross.decknotes.DataBase.Entities.DeckEntity;
 
 import java.util.List;
@@ -14,7 +11,13 @@ import java.util.List;
 public interface DeckDao
 {
     @Insert
-    void insert(DeckEntity deck);
+    void insertDeck(DeckEntity deck);
+
+    @Update
+    void updateDeck(DeckEntity deck);
+
+    @Delete
+    void deleteDeck(DeckEntity deck);
 
     @Query("SELECT * from deck_table")
     LiveData<List<DeckEntity>> getAllDecks();

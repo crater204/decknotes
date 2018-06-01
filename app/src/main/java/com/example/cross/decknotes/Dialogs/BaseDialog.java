@@ -1,4 +1,4 @@
-package com.example.cross.decknotes;
+package com.example.cross.decknotes.Dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,9 +8,21 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 
-public class AddDeckDialog extends DialogFragment
+public abstract class BaseDialog extends DialogFragment
 {
+    int layout;
+    int title;
+    int positiveButton;
+    int negativeButton;
+
     DeckDialogListener listener;
+
+    BaseDialog(int layout, int title, int positiveButton, int negativeButton) {
+        this.layout = layout;
+        this.title = title;
+        this.positiveButton = positiveButton;
+        this.negativeButton = negativeButton;
+    }
 
     @Override
     public void onAttach(Activity activity)
@@ -30,22 +42,22 @@ public class AddDeckDialog extends DialogFragment
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        builder.setView(inflater.inflate(R.layout.add_deck_dialog, null))
-                .setTitle(R.string.add_deck)
-                .setPositiveButton(R.string.add, new DialogInterface.OnClickListener()
+        builder.setView(inflater.inflate(layout, null))
+                .setTitle(title)
+                .setPositiveButton(positiveButton, new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i)
                     {
-                        listener.onDialogPositiveClick(AddDeckDialog.this);
+                        listener.onDialogPositiveClick(BaseDialog.this);
                     }
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
+                .setNegativeButton(negativeButton, new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i)
                     {
-                        listener.onDialogNegativeClick(AddDeckDialog.this);
+                        listener.onDialogNegativeClick(BaseDialog.this);
                     }
                 });
         return builder.create();
