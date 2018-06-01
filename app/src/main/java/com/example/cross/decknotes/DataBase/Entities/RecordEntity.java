@@ -51,9 +51,9 @@ public class RecordEntity
         return isWin;
     }
 
-    public void setWin(boolean win)
+    public void setIsWin(boolean isWin)
     {
-        isWin = win;
+        isWin = isWin;
     }
 
     public int getRecordId()

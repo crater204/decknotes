@@ -45,7 +45,6 @@ public class DeckViewModel extends AndroidViewModel
 
     public void insertMatch(int deckId, boolean isWin)
     {
-        System.out.println(new Date());
         RecordEntity record = new RecordEntity(deckId, new Date(), isWin);
         repository.insertMatch(record);
     }

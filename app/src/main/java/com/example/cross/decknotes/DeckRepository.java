@@ -10,6 +10,7 @@ import com.example.cross.decknotes.DataBase.DeckRoomDatabase;
 import com.example.cross.decknotes.DataBase.Entities.DeckEntity;
 import com.example.cross.decknotes.DataBase.Entities.RecordEntity;
 
+import java.util.Date;
 import java.util.List;
 
 public class DeckRepository
@@ -119,6 +120,7 @@ public class DeckRepository
                 deckDao.addWin(record.getDeckId());
             }
             deckDao.addPlay(record.getDeckId());
+            deckDao.setLatestInteraction(record.getDeckId(), new Date());
             return null;
         }
     }

@@ -5,6 +5,8 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.util.Date;
+
 @Entity(tableName = "deck_table")
 public class DeckEntity
 {
@@ -13,6 +15,9 @@ public class DeckEntity
 
     @NonNull
     private String name;
+
+    @NonNull
+    private Date latestInteraction;
 
     private int numberOfPlays;
 
@@ -27,6 +32,7 @@ public class DeckEntity
         this.name = name;
         this.numberOfPlays = numberOfPlays;
         this.numberOfWins = numberOfWins;
+        this.latestInteraction = new Date();
     }
 
     public int getId()
@@ -58,6 +64,10 @@ public class DeckEntity
     {
         return numberOfWins;
     }
+
+    public Date getLatestInteraction() { return latestInteraction; }
+
+    public void setLatestInteraction(Date date) { this.latestInteraction = date; }
 
     public int getWinPercentage()
     {

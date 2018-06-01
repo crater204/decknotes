@@ -43,6 +43,8 @@ public class DeckDetails extends AppCompatActivity implements BaseDialog.DeckDia
 {
     private DeckEntity deck;
     private DeckViewModel deckViewModel;
+    private final String EDIT_DIALOG_TAG = "EditDeckDialog";
+    private final String CONFIRM_DELETE_DIALOG_TAG = "ConfirmDeleteDialog";
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -56,11 +58,11 @@ public class DeckDetails extends AppCompatActivity implements BaseDialog.DeckDia
         switch( item.getItemId()) {
             case R.id.action_edit:
                 EditDeckNameDialog editDialog = new EditDeckNameDialog();
-                editDialog.show(getFragmentManager(), "EditDeckDialog");
+                editDialog.show(getFragmentManager(), EDIT_DIALOG_TAG);
                 return true;
             case R.id.action_delete:
                 ConfirmDeleteDialog deleteDialog = new ConfirmDeleteDialog();
-                deleteDialog.show(getFragmentManager(), "ConfirmDeleteDialog");
+                deleteDialog.show(getFragmentManager(), CONFIRM_DELETE_DIALOG_TAG);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -220,7 +222,7 @@ public class DeckDetails extends AppCompatActivity implements BaseDialog.DeckDia
                 public String getFormattedValue(float value, AxisBase axis)
                 {
                     int formattedValue = (int)value;
-                    if(formattedValue >= 0 && formattedValue < axisDates.length && axisDates[(int)value] != null)
+                    if(formattedValue >= 0 && formattedValue < axisDates.length && axisDates[formattedValue] != null)
                     {
                         return axisDates[(int)value];
                     }
@@ -258,12 +260,12 @@ public class DeckDetails extends AppCompatActivity implements BaseDialog.DeckDia
     public void onDialogPositiveClick(DialogFragment dialog)
     {
         switch(dialog.getTag()) {
-            case "EditDeckDialog":
+            case EDIT_DIALOG_TAG:
                 EditText deckNameEditText = dialog.getDialog().findViewById(R.id.deck_name_edit_text);
                 String newName = deckNameEditText.getText().toString();
                 deckViewModel.editDeckName(deck, newName);
                 break;
-            case "ConfirmDeleteDialog":
+            case CONFIRM_DELETE_DIALOG_TAG:
                 deckViewModel.deleteDeck(deck);
                 Intent i = new Intent(this, DeckSelector.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

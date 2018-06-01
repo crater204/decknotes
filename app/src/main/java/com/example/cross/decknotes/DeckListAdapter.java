@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.example.cross.decknotes.DataBase.Entities.DeckEntity;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class DeckListAdapter extends RecyclerView.Adapter<DeckListAdapter.DeckViewHolder>
@@ -64,6 +66,16 @@ public class DeckListAdapter extends RecyclerView.Adapter<DeckListAdapter.DeckVi
     void setDecks(List<DeckEntity> decks)
     {
         this.decks = decks;
+        Collections.sort(this.decks, new Comparator<DeckEntity>()
+        {
+            @Override
+            public int compare(DeckEntity d1, DeckEntity d2)
+            {
+                // The sort is intentionally done backwards so that we sort in descending order
+                // AKA: We have the newest on top and oldest on the bottom
+                return d2.getLatestInteraction().compareTo(d1.getLatestInteraction());
+            }
+        });
         notifyDataSetChanged();
     }
 
