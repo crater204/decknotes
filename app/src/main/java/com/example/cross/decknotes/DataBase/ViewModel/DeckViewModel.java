@@ -43,14 +43,19 @@ public class DeckViewModel extends AndroidViewModel
         repository.updateDeck(deck);
     }
 
-    public void insertMatch(int deckId, boolean isWin)
+    public RecordEntity insertMatch(int deckId, boolean isWin)
     {
         RecordEntity record = new RecordEntity(deckId, new Date(), isWin);
         repository.insertMatch(record);
+        return record;
     }
 
     public void deleteDeck(DeckEntity deck) {
         repository.deleteDeck(deck);
+    }
+
+    public void deleteRecord(RecordEntity record) {
+        repository.deleteRecord(record);
     }
 
     public void insertTestMatches(int deckId)

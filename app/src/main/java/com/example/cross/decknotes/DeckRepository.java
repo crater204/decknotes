@@ -62,6 +62,37 @@ public class DeckRepository
         return recordDao.getRecordsForDeck(deckId);
     }
 
+    public void deleteRecord(RecordEntity record)
+    {
+        new DeleteRecordAsyncTask(deckDao, recordDao).execute(record);
+    }
+
+    private static class DeleteRecordAsyncTask extends AsyncTask<RecordEntity, Void, Void>
+    {
+        private DeckDao deckDao;
+        private RecordDao recordDao;
+
+        DeleteRecordAsyncTask(DeckDao deck, RecordDao record)
+        {
+            deckDao = deck;
+            recordDao = record;
+        }
+
+        @Override
+        protected Void doInBackground(RecordEntity... records)
+        {
+            RecordEntity record = records[0];
+            if(record.isWin())
+            {
+                deckDao.removeWin(record.getDeckId());
+            }
+            deckDao.removePlay(record.getDeckId());
+            recordDao.deleteRecord(record.getDate(), record.isWin(), record.getDeckId());
+            System.out.println("Record Deleted");
+            return null;
+        }
+    }
+
     private static class DeleteDeckAsyncTask extends AsyncTask<DeckEntity, Void, Void>
     {
         private DeckDao deckDao;

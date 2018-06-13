@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -120,7 +121,7 @@ public class DeckDetails extends AppCompatActivity implements BaseDialog.DeckDia
             @Override
             public void onClick(View view)
             {
-                deckViewModel.insertMatch(deck.getId(), true);
+                addMatch(true);
             }
         });
         loseButton.setOnClickListener(new View.OnClickListener()
@@ -128,9 +129,31 @@ public class DeckDetails extends AppCompatActivity implements BaseDialog.DeckDia
             @Override
             public void onClick(View view)
             {
-                deckViewModel.insertMatch(deck.getId(), false);
+                addMatch(false);
             }
         });
+    }
+
+    private void addMatch(boolean isWin) {
+        final RecordEntity record = deckViewModel.insertMatch(deck.getId(), isWin);
+
+        String message;
+        if(isWin) {
+            message = "Win added";
+        } else {
+            message = "Loss added";
+        }
+
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.detail_container), message, Snackbar.LENGTH_LONG);
+        snackbar.setAction("UNDO", new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                deckViewModel.deleteRecord(record);
+            }
+        });
+        snackbar.show();
     }
 
     private void setupBarGraph(@Nullable List<RecordEntity> recordEntities)

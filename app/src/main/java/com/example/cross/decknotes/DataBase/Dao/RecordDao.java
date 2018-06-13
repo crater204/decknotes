@@ -7,6 +7,7 @@ import android.arch.persistence.room.Query;
 
 import com.example.cross.decknotes.DataBase.Entities.RecordEntity;
 
+import java.util.Date;
 import java.util.List;
 
 @Dao
@@ -20,4 +21,8 @@ public interface RecordDao
 
     @Query("DELETE from record_table WHERE deckId = :deckId")
     void deleteRecords(int deckId);
+
+    //TODO: Find a way to do this with a record ID
+    @Query("DELETE from record_table WHERE (date = :date AND isWin = :isWin AND deckId = :deckId)")
+    void deleteRecord(Date date, boolean isWin, int deckId);
 }

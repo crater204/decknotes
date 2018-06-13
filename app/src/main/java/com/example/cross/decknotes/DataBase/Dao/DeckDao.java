@@ -32,6 +32,12 @@ public interface DeckDao
     @Query("UPDATE deck_table SET numberOfPlays = numberOfPlays + 1 WHERE id = :deckId")
     void addPlay(int deckId);
 
+    @Query("UPDATE deck_table SET numberOfWins = numberOfWins - 1 WHERE id = :deckId")
+    void removeWin(int deckId);
+
+    @Query("UPDATE deck_table SET numberOfPlays = numberOfPlays - 1 WHERE id = :deckId")
+    void removePlay(int deckId);
+
     @Query("UPDATE deck_table SET latestInteraction = :date WHERE id = :deckId ")
     void setLatestInteraction(int deckId, Date date);
 }
